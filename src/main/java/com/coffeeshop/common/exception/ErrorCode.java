@@ -1,0 +1,46 @@
+package com.coffeeshop.common.exception;
+
+public enum ErrorCode {
+    // Authentication & Authorization
+    AUTH_INVALID_CREDENTIALS,
+    AUTH_TOKEN_EXPIRED,
+    AUTH_ACCESS_DENIED,
+    AUTH_USER_ALREADY_EXISTS,
+    USER_NOT_FOUND,
+
+    // Product Module
+    PRODUCT_NOT_FOUND,
+    PRODUCT_UNAVAILABLE,
+
+    // Cart Module
+    CART_NOT_FOUND,
+    CART_ITEM_NOT_FOUND,
+
+    // Order Module
+    ORDER_NOT_FOUND,
+    ORDER_ALREADY_CANCELLED,
+    ORDER_INVALID_STATUS,
+    ORDER_EMPTY_ITEMS,
+
+    // Inventory Module
+    INVENTORY_INSUFFICIENT,
+    INVENTORY_CONCURRENT_UPDATE,
+    INVENTORY_NOT_FOUND,
+
+    // Payment Module
+    PAYMENT_FAILED,
+    PAYMENT_PENDING,
+    PAYMENT_ALREADY_PROCESSED,
+    PAYMENT_TIMEOUT,
+    PAYMENT_NOT_FOUND,
+
+    // Idempotency
+    IDEMPOTENCY_KEY_REUSED,
+    IDEMPOTENCY_KEY_REQUIRED,
+
+    // General & Validation
+    REQUEST_VALIDATION_FAILED,
+    RESOURCE_NOT_FOUND,
+    BUSINESS_CONFLICT,
+    INTERNAL_ERROR
+}
