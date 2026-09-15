@@ -3,6 +3,11 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
+
+# Build arg for API Base URL with default Render backend
+ARG VITE_API_BASE_URL=https://pos-system-hl6d.onrender.com
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
 COPY . .
 RUN npm run build
 
