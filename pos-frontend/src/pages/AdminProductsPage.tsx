@@ -19,6 +19,7 @@ import {
 import { productApi } from '../api/product.api';
 import type { Product, CreateProductInput, UpdateProductInput } from '../types';
 import { formatCurrency } from '../utils/format';
+import { broadcastSync } from '../utils/syncChannel';
 
 interface ProductFormData {
   id?: string;
@@ -74,6 +75,7 @@ export default function AdminProductsPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-products'] });
       queryClient.invalidateQueries({ queryKey: ['products'] });
+      broadcastSync('PRODUCT_UPDATED');
       setIsModalOpen(false);
       setFormData(INITIAL_FORM);
       showFeedback('success', 'Product created successfully!');
@@ -90,6 +92,7 @@ export default function AdminProductsPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-products'] });
       queryClient.invalidateQueries({ queryKey: ['products'] });
+      broadcastSync('PRODUCT_UPDATED');
       setIsModalOpen(false);
       setEditingProduct(null);
       setFormData(INITIAL_FORM);
@@ -106,6 +109,7 @@ export default function AdminProductsPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-products'] });
       queryClient.invalidateQueries({ queryKey: ['products'] });
+      broadcastSync('PRODUCT_UPDATED');
       setDeleteConfirmId(null);
       showFeedback('success', 'Product deleted successfully.');
     },

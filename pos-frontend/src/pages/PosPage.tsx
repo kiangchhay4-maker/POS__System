@@ -22,6 +22,7 @@ import { orderApi } from '../api/order.api';
 import { useCartStore } from '../stores/cart.store';
 import { useAuthStore } from '../stores/auth.store';
 import { formatCurrency, formatDateTime } from '../utils/format';
+import { broadcastSync } from '../utils/syncChannel';
 import type { Product, OrderType, PaymentMethod } from '../types';
 
 function generateOrderNumber(): string {
@@ -165,6 +166,7 @@ export default function PosPage() {
       const orders = JSON.parse(existingRaw);
       orders.unshift(orderPayload);
       localStorage.setItem('coffee_pos_orders', JSON.stringify(orders));
+      broadcastSync('ORDER_CREATED', orderPayload);
     } catch (e) {
       console.error('Failed to cache order locally', e);
     }

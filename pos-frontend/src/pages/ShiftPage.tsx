@@ -33,6 +33,7 @@ export default function ShiftPage() {
       return live || currentShift;
     },
     initialData: currentShift,
+    refetchInterval: 3000,
   });
 
   const activeShift = shiftData || currentShift;

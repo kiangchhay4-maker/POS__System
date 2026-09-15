@@ -51,6 +51,7 @@ export default function OrdersPage() {
           new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
       );
     },
+    refetchInterval: 3000,
   });
 
   // Unique staff cashier names

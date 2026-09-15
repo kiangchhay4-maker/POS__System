@@ -12,21 +12,51 @@ import SettingsPage from './pages/SettingsPage';
 import AdminProductsPage from './pages/AdminProductsPage';
 import AdminStaffPage from './pages/AdminStaffPage';
 
+import { useEffect } from 'react';
+import { subscribeSync } from './utils/syncChannel';
+
 // Layout
 import MainLayout from './components/layout/MainLayout';
 
-// Create React Query client
+// Create React Query client optimized for real-time responsiveness
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
-      refetchOnWindowFocus: false,
-      staleTime: 5 * 60 * 1000, // 5 minutes
+      refetchOnWindowFocus: true,
+      staleTime: 3000, // 3 seconds
     },
   },
 });
 
 function App() {
+  // Listen for real-time events across windows and tabs
+  useEffect(() => {
+    const unsubscribe = subscribeSync((msg) => {
+      switch (msg.type) {
+        case 'ORDER_CREATED':
+          queryClient.invalidateQueries({ queryKey: ['orders-history'] });
+          queryClient.invalidateQueries({ queryKey: ['current-shift'] });
+          queryClient.invalidateQueries({ queryKey: ['products'] });
+          break;
+        case 'SHIFT_UPDATED':
+          queryClient.invalidateQueries({ queryKey: ['current-shift'] });
+          break;
+        case 'PRODUCT_UPDATED':
+          queryClient.invalidateQueries({ queryKey: ['products'] });
+          queryClient.invalidateQueries({ queryKey: ['admin-products-list'] });
+          break;
+        case 'STAFF_UPDATED':
+          queryClient.invalidateQueries({ queryKey: ['admin-staff-list'] });
+          break;
+        case 'SYSTEM_RESET':
+          queryClient.invalidateQueries();
+          break;
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>

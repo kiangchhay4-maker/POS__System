@@ -14,6 +14,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { staffApi } from '../api/staff.api';
+import { broadcastSync } from '../utils/syncChannel';
 
 export default function AdminStaffPage() {
   const queryClient = useQueryClient();
@@ -50,6 +51,7 @@ export default function AdminStaffPage() {
       setPassword('StaffPassword123!');
       setStation('Cashier 1 - Main Register');
       setRole('STAFF');
+      broadcastSync('STAFF_UPDATED');
       setFeedback({
         type: 'success',
         message: `${newStaff.role === 'ADMIN' ? 'Super Admin' : 'Staff'} account "${newStaff.name}" registered successfully!`,
@@ -70,6 +72,7 @@ export default function AdminStaffPage() {
       staffApi.deleteStaff(id, phone),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-staff-list'] });
+      broadcastSync('STAFF_UPDATED');
       setFeedback({ type: 'success', message: 'Staff account removed permanently.' });
       setTimeout(() => setFeedback(null), 3000);
     },
