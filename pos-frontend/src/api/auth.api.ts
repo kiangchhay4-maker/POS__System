@@ -4,7 +4,7 @@ import { getLocalStaff, saveLocalStaff } from './staff.api';
 
 export const authApi = {
   async login(credentials: LoginRequest): Promise<AuthResponse> {
-    const cleanPhone = (credentials.phone || '').trim().replace(/[\s-]/g, '');
+    let cleanPhone = (credentials.phone || '').trim().replace(/[\s-]/g, '');
     const cleanPassword = (credentials.password || '').trim();
 
     // 1. Check local staff accounts first to see if this user was created locally
@@ -14,6 +14,12 @@ export const authApi = {
         s.phone.replace(/[\s-]/g, '').toLowerCase() === cleanPhone.toLowerCase() ||
         s.name.trim().toLowerCase() === credentials.phone.trim().toLowerCase()
     );
+
+    if (cleanPhone.toLowerCase() === 'visal') {
+      cleanPhone = '0789789789';
+    } else if (localMatched && localMatched.phone) {
+      cleanPhone = localMatched.phone;
+    }
 
     // If local matched and password is confirmed, create instant session if backend is slow/offline
     try {

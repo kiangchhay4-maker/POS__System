@@ -43,15 +43,16 @@ class ApiClient {
           url.includes('/api/v1/auth/refresh');
 
         if (error.response?.status === 401 && !isAuthUrl) {
-          // Token expired, try to refresh
-          const refreshed = await this.handleTokenRefresh();
-          if (refreshed && error.config) {
-            // Retry the original request
-            return this.client.request(error.config);
-          } else {
-            // Refresh failed, redirect to login
-            this.handleLogout();
+          // Attempt token refresh if a valid JWT refresh token is available
+          const refreshToken = this.getRefreshToken();
+          if (refreshToken && refreshToken.startsWith('eyJ')) {
+            const refreshed = await this.handleTokenRefresh();
+            if (refreshed && error.config) {
+              return this.client.request(error.config);
+            }
           }
+          // Do NOT aggressively wipe session or force window.location.href = '/login'
+          // Background requests can fail without breaking the user's active session.
         }
         return Promise.reject(error);
       }
@@ -114,7 +115,7 @@ class ApiClient {
     }
   }
 
-  private handleLogout() {
+  handleLogout() {
     this.clearTokens();
     window.location.href = '/login';
   }

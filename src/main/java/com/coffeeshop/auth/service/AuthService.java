@@ -62,7 +62,9 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public AuthResponse login(LoginRequest request) {
-        User user = userRepository.findByPhone(request.phone())
+        String identifier = request.phone().trim();
+        User user = userRepository.findByPhone(identifier)
+                .or(() -> userRepository.findByNameIgnoreCase(identifier))
                 .orElseThrow(() -> new UnauthorizedException(
                         ErrorCode.AUTH_INVALID_CREDENTIALS,
                         "Invalid phone or password credentials."
