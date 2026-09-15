@@ -1,20 +1,22 @@
 import { NavLink } from 'react-router-dom';
 import { Coffee, ShoppingCart, Clock, Settings, Package, ShieldCheck, Users, Store } from 'lucide-react';
 import { useAuthStore } from '../../stores/auth.store';
+import { useLanguageStore } from '../../stores/language.store';
 
 export default function Sidebar() {
   const { user } = useAuthStore();
+  const { t } = useLanguageStore();
 
   const mainNavigation = [
-    { name: 'Sell (POS)', path: '/pos', icon: ShoppingCart },
-    { name: 'Orders History', path: '/orders', icon: Coffee },
-    { name: 'Shift & Drawer', path: '/shift', icon: Clock },
+    { name: t('sellPos'), path: '/pos', icon: ShoppingCart },
+    { name: t('ordersHistory'), path: '/orders', icon: Coffee },
+    { name: t('shiftDrawer'), path: '/shift', icon: Clock },
   ];
 
   const adminNavigation = [
-    { name: 'Manage Products', path: '/admin/products', icon: Package, badge: 'Admin' },
-    { name: 'Staff & Cashiers', path: '/admin/staff', icon: Users, badge: 'Admin' },
-    { name: 'Settings', path: '/settings', icon: Settings },
+    { name: t('manageProducts'), path: '/admin/products', icon: Package, badge: t('adminBadge') },
+    { name: t('staffCashiers'), path: '/admin/staff', icon: Users, badge: t('adminBadge') },
+    { name: t('settings'), path: '/settings', icon: Settings },
   ];
 
   return (
@@ -26,10 +28,10 @@ export default function Sidebar() {
         </div>
         <div className="ml-3">
           <span className="text-base font-extrabold text-gray-900 leading-none block">
-            Coffee POS
+            {t('appName')}
           </span>
           <span className="text-[11px] font-semibold text-amber-700 tracking-wide">
-            Enterprise Edition
+            {t('enterpriseEdition')}
           </span>
         </div>
       </div>
@@ -40,7 +42,7 @@ export default function Sidebar() {
           {/* Main cashier operations */}
           <div>
             <span className="px-3 text-[11px] font-extrabold uppercase text-gray-400 tracking-wider block mb-2">
-              Operations
+              {t('operations')}
             </span>
             <nav className="space-y-1">
               {mainNavigation.map((item) => {
@@ -69,7 +71,7 @@ export default function Sidebar() {
           {user?.role === 'ADMIN' && (
             <div>
               <span className="px-3 text-[11px] font-extrabold uppercase text-gray-400 tracking-wider block mb-2">
-                Management
+                {t('management')}
               </span>
               <nav className="space-y-1">
                 {adminNavigation.map((item) => {

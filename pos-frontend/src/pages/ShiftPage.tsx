@@ -13,11 +13,13 @@ import {
 import { shiftApi } from '../api/shift.api';
 import { useShiftStore } from '../stores/shift.store';
 import { useAuthStore } from '../stores/auth.store';
+import { useLanguageStore } from '../stores/language.store';
 import { formatCurrency, formatDateTime } from '../utils/format';
 
 export default function ShiftPage() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
+  const { t } = useLanguageStore();
   const { currentShift, clearShift } = useShiftStore();
 
   const [closingCash, setClosingCash] = useState('');
@@ -89,12 +91,12 @@ export default function ShiftPage() {
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 flex items-center gap-1">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                Active Shift
+                {t('shiftOpen')}
               </span>
-              <h1 className="text-2xl font-bold text-gray-900">Shift Management</h1>
+              <h1 className="text-2xl font-bold text-gray-900">{t('shiftManagement')}</h1>
             </div>
             <p className="text-sm text-gray-500 mt-1">
-              Monitor drawer balance, sales volume, and reconcile cash at the end of the shift.
+              {t('shiftSubtitle')}
             </p>
           </div>
 
@@ -112,7 +114,7 @@ export default function ShiftPage() {
               title="Reset shift and drawer to $0.00"
             >
               <RotateCcw className="w-3.5 h-3.5" />
-              Reset to $0
+              0
             </button>
 
             <button
@@ -123,7 +125,7 @@ export default function ShiftPage() {
               className="flex items-center gap-2 px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-sm font-bold rounded-xl shadow-sm transition-all active:scale-[0.99]"
             >
               <LogOut className="w-4 h-4" />
-              Reconcile & Close Shift
+              {t('closeShift')}
             </button>
           </div>
         </div>
@@ -138,9 +140,9 @@ export default function ShiftPage() {
               <User className="w-6 h-6" />
             </div>
             <div>
-              <div className="text-xs text-gray-400 font-bold uppercase">Cashier On Duty</div>
+              <div className="text-xs text-gray-400 font-bold uppercase">{t('cashier')}</div>
               <div className="text-base font-bold text-gray-900">{user?.name || 'Cashier'}</div>
-              <div className="text-xs text-gray-500">{user?.phone || 'ID: 010203'}</div>
+              <div className="text-xs text-gray-500">{user?.phone || '0789789789'}</div>
             </div>
           </div>
 
@@ -149,11 +151,11 @@ export default function ShiftPage() {
               <Calendar className="w-6 h-6" />
             </div>
             <div>
-              <div className="text-xs text-gray-400 font-bold uppercase">Shift Opened At</div>
+              <div className="text-xs text-gray-400 font-bold uppercase">{t('openedAt')}</div>
               <div className="text-sm font-bold text-gray-900">
-                {activeShift?.openedAt ? formatDateTime(activeShift.openedAt) : 'Today, 08:00 AM'}
+                {activeShift?.openedAt ? formatDateTime(activeShift.openedAt) : 'Today'}
               </div>
-              <div className="text-xs text-emerald-600 font-semibold">Shift in progress</div>
+              <div className="text-xs text-emerald-600 font-semibold">{t('shiftOpen')}</div>
             </div>
           </div>
 
@@ -162,11 +164,11 @@ export default function ShiftPage() {
               <Clock className="w-6 h-6" />
             </div>
             <div>
-              <div className="text-xs text-gray-400 font-bold uppercase">Drawer Balance</div>
+              <div className="text-xs text-gray-400 font-bold uppercase">{t('expectedInDrawer')}</div>
               <div className="text-xl font-black text-emerald-700">
                 {formatCurrency(expectedCashInDrawer)}
               </div>
-              <div className="text-xs text-gray-500">Includes opening float</div>
+              <div className="text-xs text-gray-500">{t('drawerBalanced')}</div>
             </div>
           </div>
         </div>
@@ -174,36 +176,36 @@ export default function ShiftPage() {
         {/* Financial Metrics Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
           <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs">
-            <span className="text-xs font-bold text-gray-400 uppercase">Starting Float</span>
+            <span className="text-xs font-bold text-gray-400 uppercase">{t('openingFloat')}</span>
             <div className="text-2xl font-bold text-gray-800 mt-1">
               {formatCurrency(openingCash)}
             </div>
-            <p className="text-[11px] text-gray-400 mt-1">Counted at shift start</p>
+            <p className="text-[11px] text-gray-400 mt-1">Float</p>
           </div>
 
           <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs">
-            <span className="text-xs font-bold text-gray-400 uppercase">Cash Sales</span>
+            <span className="text-xs font-bold text-gray-400 uppercase">{t('cashSales')}</span>
             <div className="text-2xl font-bold text-amber-700 mt-1">
               {formatCurrency(cashSales)}
             </div>
-            <p className="text-[11px] text-gray-400 mt-1">Physical cash payments</p>
+            <p className="text-[11px] text-gray-400 mt-1">{t('cash')}</p>
           </div>
 
           <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs">
-            <span className="text-xs font-bold text-gray-400 uppercase">Digital / Card / QR</span>
+            <span className="text-xs font-bold text-gray-400 uppercase">{t('khqrSales')}</span>
             <div className="text-2xl font-bold text-blue-600 mt-1">
               {formatCurrency(digitalSales)}
             </div>
-            <p className="text-[11px] text-gray-400 mt-1">KHQR & Card transactions</p>
+            <p className="text-[11px] text-gray-400 mt-1">KHQR & Card</p>
           </div>
 
           <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs">
-            <span className="text-xs font-bold text-gray-400 uppercase">Total Shift Sales</span>
+            <span className="text-xs font-bold text-gray-400 uppercase">{t('totalRevenue')}</span>
             <div className="text-2xl font-black text-gray-900 mt-1">
               {formatCurrency(totalShiftSales)}
             </div>
             <p className="text-[11px] text-emerald-600 font-semibold mt-1">
-              {localOrders.length} completed orders
+              {localOrders.length} {t('completed')}
             </p>
           </div>
         </div>
@@ -229,31 +231,31 @@ export default function ShiftPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
           <div className="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-gray-200 overflow-hidden">
             <div className="p-6 bg-rose-600 text-white">
-              <h3 className="text-xl font-black">Close Register & End Shift</h3>
+              <h3 className="text-xl font-black">{t('closeShift')}</h3>
               <p className="text-xs text-rose-100 mt-0.5">
-                Count all cash in drawer and enter final closing amount.
+                {t('enterClosingCash')}
               </p>
             </div>
 
             <div className="p-6 space-y-4">
               <div className="p-4 bg-gray-50 rounded-xl space-y-2 text-xs">
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Starting Cash:</span>
+                  <span className="text-gray-500">{t('openingFloat')}:</span>
                   <span className="font-bold text-gray-800">{formatCurrency(openingCash)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">+ Cash Sales:</span>
+                  <span className="text-gray-500">+ {t('cashSales')}:</span>
                   <span className="font-bold text-amber-700">{formatCurrency(cashSales)}</span>
                 </div>
                 <div className="flex justify-between pt-1 border-t border-gray-200 font-bold text-sm">
-                  <span>Expected in Drawer:</span>
+                  <span>{t('expectedInDrawer')}:</span>
                   <span className="text-emerald-700">{formatCurrency(expectedCashInDrawer)}</span>
                 </div>
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
-                  Actual Counted Cash ($) *
+                  {t('enterClosingCash')} *
                 </label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold">
@@ -282,19 +284,19 @@ export default function ShiftPage() {
                     : 'bg-rose-50 border-rose-200 text-rose-800'
                 }`}
               >
-                <span>Discrepancy (Variance):</span>
+                <span>{t('difference')}:</span>
                 <span>
-                  {discrepancy > 0 ? `+${formatCurrency(discrepancy)} (Over)` : discrepancy < 0 ? `-${formatCurrency(Math.abs(discrepancy))} (Short)` : 'Balanced ($0.00)'}
+                  {discrepancy > 0 ? `+${formatCurrency(discrepancy)}` : discrepancy < 0 ? `-${formatCurrency(Math.abs(discrepancy))}` : '$0.00'}
                 </span>
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
-                  Closing Notes (Optional)
+                  {t('itemNotes')}
                 </label>
                 <textarea
                   rows={2}
-                  placeholder="Explain any variance or drawer handoff notes..."
+                  placeholder={t('itemNotes')}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   className="w-full px-3 py-2 text-xs border border-gray-300 rounded-xl focus:ring-2 focus:ring-rose-500 resize-none"
@@ -307,7 +309,7 @@ export default function ShiftPage() {
                   onClick={() => setIsClosingModalOpen(false)}
                   className="flex-1 py-2.5 text-xs font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors"
                 >
-                  Cancel
+                  {t('cancel')}
                 </button>
                 <button
                   type="button"
@@ -315,7 +317,7 @@ export default function ShiftPage() {
                   onClick={() => closeShiftMutation.mutate()}
                   className="flex-1 py-2.5 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-xl shadow transition-colors disabled:opacity-50"
                 >
-                  {closeShiftMutation.isPending ? 'Closing...' : 'Confirm & Close'}
+                  {closeShiftMutation.isPending ? t('processingPayment') : t('confirmCloseShift')}
                 </button>
               </div>
             </div>
@@ -330,22 +332,22 @@ export default function ShiftPage() {
             <div className="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
               <CheckCircle className="w-8 h-8" />
             </div>
-            <h3 className="text-xl font-bold text-gray-900">Shift Closed Successfully</h3>
+            <h3 className="text-xl font-bold text-gray-900">{t('shiftSummary')}</h3>
             <p className="text-xs text-gray-500 mt-1">
-              Your drawer report has been finalized.
+              {t('orderSuccess')}
             </p>
 
             <div className="my-5 p-4 bg-gray-50 rounded-2xl text-xs space-y-2 text-left">
               <div className="flex justify-between">
-                <span className="text-gray-500">Expected:</span>
+                <span className="text-gray-500">{t('expectedInDrawer')}:</span>
                 <span className="font-semibold">{formatCurrency(expectedCashInDrawer)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Actual Counted:</span>
+                <span className="text-gray-500">{t('amountReceived')}:</span>
                 <span className="font-semibold">{formatCurrency(closingCashNum)}</span>
               </div>
               <div className="flex justify-between font-bold pt-1 border-t border-gray-200">
-                <span>Variance:</span>
+                <span>{t('difference')}:</span>
                 <span
                   className={
                     discrepancy < 0
@@ -367,7 +369,7 @@ export default function ShiftPage() {
               }}
               className="w-full py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl shadow transition-colors"
             >
-              Open New Shift
+              {t('openShift')}
             </button>
           </div>
         </div>
